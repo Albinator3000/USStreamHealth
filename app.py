@@ -42,18 +42,18 @@ st.bar_chart(df["datum_of_gage"], use_container_width=True)
 st.write("### Stream Health Report")
 def health_rating(datum):
     if datum >= df["datum_of_gage"].quantile(0.75):
-        return "🟢 Very Healthy"
+        return "Very Healthy"
     elif datum >= df["datum_of_gage"].median():
-        return "🟡 Moderately Healthy"
+        return "Moderately Healthy"
     elif datum >= df["datum_of_gage"].quantile(0.25):
-        return "🟠 At Risk"
+        return "At Risk"
     else:
-        return "🔴 Critically Unhealthy"
+        return "Critically Unhealthy"
 
 df["health_status"] = df["datum_of_gage"].apply(health_rating)
 
 def color_code(status):
-    return {"🟢 Very Healthy": "#00FF00", "🟡 Moderately Healthy": "#FFFF00", "🟠 At Risk": "#FFA500", "🔴 Critically Unhealthy": "#FF0000"}[status]
+    return {"Very Healthy": "#00FF00", "Moderately Healthy": "#FFFF00", "At Risk": "#FFA500", "Critically Unhealthy": "#FF0000"}[status]
 
 # Group health status by county with expanders
 st.write("### Stream Health by County")
@@ -63,22 +63,22 @@ for county in df["county"].unique():
         tabs = st.tabs(["Healthy Streams", "Moderate Streams", "At-Risk Streams", "Critical Streams"])
         for index, row in county_df.iterrows():
             health_category = row["health_status"]
-            if health_category == "🟢 Very Healthy":
+            if health_category == "Very Healthy":
                 with tabs[0]:
                     st.markdown(f'<div style="background-color:{color_code(health_category)}; padding:10px; margin:5px; border-radius:5px;">' \
                                 f'<b>{row["name"]}</b>: {health_category}</div>', 
                                 unsafe_allow_html=True)
-            elif health_category == "🟡 Moderately Healthy":
+            elif health_category == "Moderately Healthy":
                 with tabs[1]:
                     st.markdown(f'<div style="background-color:{color_code(health_category)}; padding:10px; margin:5px; border-radius:5px;">' \
                                 f'<b>{row["name"]}</b>: {health_category}</div>', 
                                 unsafe_allow_html=True)
-            elif health_category == "🟠 At Risk":
+            elif health_category == "At Risk":
                 with tabs[2]:
                     st.markdown(f'<div style="background-color:{color_code(health_category)}; padding:10px; margin:5px; border-radius:5px;">' \
                                 f'<b>{row["name"]}</b>: {health_category}</div>', 
                                 unsafe_allow_html=True)
-            elif health_category == "🔴 Critically Unhealthy":
+            elif health_category == "Critically Unhealthy":
                 with tabs[3]:
                     st.markdown(f'<div style="background-color:{color_code(health_category)}; padding:10px; margin:5px; border-radius:5px;">' \
                                 f'<b>{row["name"]}</b>: {health_category}</div>', 
@@ -86,12 +86,12 @@ for county in df["county"].unique():
 
 # Recommended Actions
 st.write("### Suggested Actions for At-Risk Streams")
-attention_df = df[df["health_status"].isin(["🟠 At Risk", "🔴 Critically Unhealthy"])]
+attention_df = df[df["health_status"].isin(["At Risk", "Critically Unhealthy"])]
 if not attention_df.empty:
     st.write("- Investigate low datum of gage levels to ensure stability against extreme water events.")
     st.write("- Improve drainage management to ensure healthy watershed function.")
     st.write("- Monitor hydrologic units for changes that may affect water quality.")
 else:
-    st.write("All monitored streams are within stable levels! ✅")
+    st.write("All monitored streams are within stable levels!")
 
 
